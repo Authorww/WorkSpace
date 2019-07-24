@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.AdminDao">
+    <select id="selectAll" resultType="Admin">
+        select admin_id id, username,password from c_admin
+    </select>
+    <!--管理员登陆-->
+    <select id="selectOne" resultType="Admin">
+        select admin_id id, username,password from c_admin where username=#{username}
+    </select>
+    <!--查询所有轮播图-->
+    <select id="selectAllCarouse" resultType="Carouse">
+        select carousel_id id,title,imgPath path,status,create_time createTime from c_carousel
+    </select>
+
+    <!--//插入轮播图-->
+    <insert id="insert">
+        insert into c_carousel values (#{id},#{title},#{path},#{status},#{createTime})
+    </insert>
+    <!--删除轮播图-->
+    <delete id="delete">
+        delete from c_carousel where carousel_id=#{id}
+    </delete>
+    <!--修改轮播图-->
+    <update id="update">
+        update c_carousel set title=#{title},imgPath=#{path},status=#{status},create_time=#{createTime}
+               where carousel_id =#{id}
+    </update>
+    <!--查询总条数-->
+    <select id="totalCount" resultType="int">
+        select count(*) from c_carousel
+    </select>
+
+    <!--分页-->
+    <select id="queryByPage" resultType="Carouse">
+        select carousel_id id ,title,imgPath path,status,create_time createTime from c_carousel
+             limit ${(page-1)*rows},#{rows}
+    </select>
+    <!--修改数据库文件路径-->
+    <update id="updateImhPath" parameterType="Carouse">
+        update c_carousel set imgPath =#{path} where carousel_id=#{id}
+    </update>
+
+
+</mapper>

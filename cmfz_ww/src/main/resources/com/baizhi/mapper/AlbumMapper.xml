@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.baizhi.dao.AlbumDao">
+    <resultMap id="res1" type="Chapter">
+        <id column="cchapter_id" property="id"/>
+        <result column="ctitle" property="title"/>
+        <result column="calbum_id" property="albumId"/>
+        <result column="csize" property="size"/>
+        <result column="cdownPath" property="downPath"/>
+        <result column="cupload_time" property="uploadTime"/>
+          <association property="album" javaType="Album">
+        <id column="ealbum_id" property="id"/>
+        <result column="etitle" property="title"/>
+        <result column="ecover" property="cover"/>
+        <result column="ecount" property="count"/>
+        <result column="escore" property="score"/>
+        <result column="eauthor" property="author"/>
+        <result column="ebroadcast" property="broadcast"/>
+        <result column="ebrief" property="brief"/>
+        <result column="epublish_time" property="publishTime"/>
+          </association>
+    </resultMap>
+
+    <!--查询所有-->
+    <select id="selectAll" resultType="Album">
+        select album_id id,title,cover,count,score,author,broadcast,brief,publish_time publishTime
+              from c_album
+    </select>
+    <!--删除-->
+    <delete id="delete">
+        delete from c_album where album_id =#{id}
+    </delete>
+    <!--插入-->
+    <insert id="insert">
+        insert into c_album values (#{id},#{title},#{cover},#{count},#{score},#{author},#{broadcast},#{brief},#{publishTime})
+    </insert>
+    <!--查询总条数-->
+    <select id="totalRecords" resultType="int">
+        select count(*) from c_album
+    </select>
+    <!--查询当前页数据-->
+    <select id="queryByPage" resultType="Album">
+            select album_id id,title,cover,count,score,author,broadcast,brief,publish_time publishTime
+              from c_album limit #{begin},#{rows}
+    </select>
+    <!--修改-->
+    <update id="update" parameterType="Album">
+        update c_album set title =#{title},cover=#{cover},count=#{count},score=#{score},
+                  author=#{author},broadcast=#{broadcast},brief=#{brief},publish_time=#{publishTime}
+                  where album_id=#{id}
+    </update>
+    <!--修改文件路径-->
+    <update id="updatePath">
+        update c_album set cover=#{cover} where  album_id=#{id}
+    </update>
+
+    <!--查询所有章节-->
+    <select id="selectAllChapter" resultMap="res1">
+        select e.album_id eid,e.title etitle,e.cover ecover,e.count ecount,e.score escore,e.author eauthor,
+               e.broadcast ebroadcast,e.brief ebrief,e.publish_time epublish_time,
+               c.chapter_id cchapter_id,c.title ctitle,c.album_id calbum_id,c.size csize,
+               c.downPath cdownPath,c.upload_time cupload_time
+              from c_album e left join c_chapter c on e.album_id = c.album_id
+              where e.album_id=#{id}
+    </select>
+    <!--删除Chapter-->
+    <delete id="deleteChapter">
+        delete from c_chapter where chapter_id=#{id}
+    </delete>
+    <!--添加-->
+   <insert id="insertChapter">
+         insert into c_chapter values (#{id},#{albumId},#{title},#{size},#{downPath},#{uploadTime})
+    </insert>
+    <!--修改文件路径-->
+    <update id="updateDownPath">
+         update c_chapter set downPath=#{downPath},size =#{size} where chapter_id=#{id}
+    </update>
+
+</mapper>
