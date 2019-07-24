@@ -12,5 +12,7 @@ public class Test6 {
         System.out.println("sasasasas");
         System.out.println("111111");
         System.out.println("3333333333");
+
+        System.out.println("2222222222222");
     }
 }
